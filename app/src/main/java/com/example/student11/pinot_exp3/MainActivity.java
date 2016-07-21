@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
-    final String LOGDIR = "/sdcard/all.txt";
-    final String LOGDIR2 = "/sdcard/anketo.txt";
-    //String LOGDIR = Environment.getExternalStorageDirectory().getPath()+"/data/all.txt";
+    //final String LOGDIR = "/sdcard/all.txt";
+    //final String LOGDIR2 = "/sdcard/anketo.txt";
+    String LOGDIR = Environment.getExternalStorageDirectory().getPath()+"/data/all.txt";
     File ALL = new File(LOGDIR);
-    //String LOGDIR2 = Environment.getExternalStorageDirectory().getPath()+"/data/anketo.txt";
+    String LOGDIR2 = Environment.getExternalStorageDirectory().getPath()+"/data/anketo.txt";
     File ANK = new File(LOGDIR2);
     ArrayList list = new ArrayList();
     HashMap map = new HashMap();
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tv14;
     TextView tv15;
     TextView tv16;
+    TextView alltv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         tv14 = (TextView) findViewById(R.id.Text14);
         tv15 = (TextView) findViewById(R.id.Text15);
         tv16 = (TextView) findViewById(R.id.Text16);
+        alltv = (TextView) findViewById(R.id.AllText);
 
 
         try {
@@ -144,8 +146,8 @@ public class MainActivity extends AppCompatActivity {
                 progressDialog.show();
 
                 BufferedReader br = new BufferedReader(new FileReader(ANK));
-                int a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p;
-                a=b=c=d=e=f=g=h=i=j=k=l=m=n=o=p=0;
+                int a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q;
+                a=b=c=d=e=f=g=h=i=j=k=l=m=n=o=p=q=0;
                 while ((line = br.readLine()) != null) {
                     StringTokenizer token = new StringTokenizer(line, "\t");
                     headline = token.nextToken();
@@ -198,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    q=a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p;
                 }
                 progressDialog.dismiss();
                 //結果を画面に表示する
@@ -218,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
                 tv14.setText("   "+String.valueOf(h));
                 tv15.setText("   "+String.valueOf(l));
                 tv16.setText("   "+String.valueOf(p));
+                alltv.setText(String.valueOf(q));
                 /*System.out.println(a);
                 System.out.println(b);
                 System.out.println(c);

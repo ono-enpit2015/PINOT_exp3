@@ -86,6 +86,11 @@
                 android:text=""
                 android:id="@+id/Text16" />
         </TableRow>
+        <TableRow>
+            <TextView
+                android:text=""
+                android:id="@+id/AllText" />
+        </TableRow>
     </TableLayout>
 
 

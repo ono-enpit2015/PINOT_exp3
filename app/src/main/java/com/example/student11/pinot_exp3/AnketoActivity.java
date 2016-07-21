@@ -32,10 +32,10 @@ public class AnketoActivity extends Activity {
     HashMap map = new HashMap();;
     SparseBooleanArray checkedItemPositions;
     ListView listView;
-    final String LOGDIR = "/sdcard/all.txt";
-    final String LOGDIR2 = "/sdcard/anketo.txt";
-    //String LOGDIR = Environment.getExternalStorageDirectory().getPath()+"/data/all.txt";
-    //String LOGDIR2 = Environment.getExternalStorageDirectory().getPath()+"/data/anketo.txt";
+    //final String LOGDIR = "/sdcard/all.txt";
+    //final String LOGDIR2 = "/sdcard/anketo.txt";
+    String LOGDIR = Environment.getExternalStorageDirectory().getPath()+"/data/all.txt";
+    String LOGDIR2 = Environment.getExternalStorageDirectory().getPath()+"/data/anketo.txt";
     File ALL = new File(LOGDIR);
     File ANK = new File(LOGDIR2);
     String line;
