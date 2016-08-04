@@ -1,10 +1,14 @@
 package com.example.student11.pinot_exp3;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,10 +18,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
+
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -25,10 +36,14 @@ import java.util.StringTokenizer;
 public class MainActivity extends AppCompatActivity {
     //final String LOGDIR = "/sdcard/all.txt";
     //final String LOGDIR2 = "/sdcard/anketo.txt";
-    String LOGDIR = Environment.getExternalStorageDirectory().getPath()+"/data/all.txt";
-    File ALL = new File(LOGDIR);
+    String LOGDIR = Environment.getExternalStorageDirectory().getPath()+"/data/";
+    String LOGDIR1 = Environment.getExternalStorageDirectory().getPath()+"/data/all.txt";
     String LOGDIR2 = Environment.getExternalStorageDirectory().getPath()+"/data/anketo.txt";
+    final String SDFILE3 = LOGDIR + "username.txt";
+    File ALL = new File(LOGDIR1);
     File ANK = new File(LOGDIR2);
+    File DATA = new File(LOGDIR);
+    File NAME = new File(SDFILE3);
     ArrayList list = new ArrayList();
     HashMap map = new HashMap();
     String line;
@@ -54,11 +69,20 @@ public class MainActivity extends AppCompatActivity {
     TextView tv15;
     TextView tv16;
     TextView alltv;
+    AsyncTask<Void, Void, String> task;
+    private ProgressDialog progressDialog;
+    static String path;
+    String resultFileName;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(!DATA.exists()) {
+            DATA.mkdir();
+        }
 
         // クリックイベントを取得したいボタン
         Button downloadButton = (Button)findViewById(R.id.anketoButton);
@@ -87,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         alltv = (TextView) findViewById(R.id.AllText);
 
 
-        try {
+        /*try {
             if (ANK.createNewFile()) {
                 //Toast.makeText(MainActivity.this, "ファイルの作成に成功", Toast.LENGTH_SHORT).show();
             } else {
@@ -96,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             //Toast.makeText(MainActivity.this, "例外が発生", Toast.LENGTH_SHORT).show();
             System.out.println(e);
-        }
+        }*/
     }
 
     @Override
@@ -234,8 +258,177 @@ public class MainActivity extends AppCompatActivity {
             }catch (IOException e) {
                 e.printStackTrace();
             }
+
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("結果の送信")
+                    .setMessage("結果を送信しますか？")
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // OK button pressed
+                            try {
+                                NAME.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                BufferedReader name = new BufferedReader(new FileReader(NAME));
+                                username = name.readLine();
+                                name.close();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+
+                            path = LOGDIR + "/anketo.txt";
+                            resultFileName = username + "興味の有無.txt";
+                            DataSend();
+                            task.execute();
+                        }
+                    })
+                    .setNegativeButton("NO", null)
+                    .show();
         }
     };
+
+    private void DataSend(){
+        // タスク
+        task = new AsyncTask<Void, Void, String>() {
+
+            /**
+             * 準備
+             */
+            @Override
+            protected void onPreExecute() {
+
+                // 進捗ダイアログを開始
+                MainActivity.this.progressDialog = new ProgressDialog(MainActivity.this);
+                MainActivity.this.progressDialog.setMessage("Now Loading ...");
+                MainActivity.this.progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                MainActivity.this.progressDialog.setCancelable(true);
+                MainActivity.this.progressDialog.show();
+            }
+
+            /**
+             * 実行
+             */
+            @Override
+            protected String doInBackground(Void... params) {
+
+                FTPClient ftp = null;
+                FileInputStream fis = null;
+                FileOutputStream fos = null;
+
+                try {
+
+                    ftp = new FTPClient();
+
+                    // エンコーディング
+                    ftp.setControlEncoding("SJIS");     //コネクトの前に設定     Windowsサーバー:"Windows-31J"or"SJIS"
+
+                    // 接続前タイムアウト：15秒
+                    ftp.setDefaultTimeout(15000);
+                    Log.e("デバック", "0");
+                    // 接続
+                    ftp.connect("133.71.201.164", 21);       //ホスト名「koblab.cs.ehime-u.ac.jp」に対して、ポート「21」に接続する   133.71.201.142
+                    Log.e("デバック", "1");
+                    // 接続エラーの場合
+                    if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
+
+                        return "サーバーに接続できません";
+                    }
+                    // 接続後タイムアウト：10秒
+                    ftp.setSoTimeout(15000);
+
+                    // ログイン
+                    if (!ftp.login("ono", "qt7gn089ebdonx2")) {
+
+                        return "サーバーの認証に失敗しました";
+                    }
+                    Log.e("デバック", "2");
+                    // ファイル種別：アスキーモード
+                    ftp.setFileType(FTP.ASCII_FILE_TYPE);//BINARY_FILE_TYPE
+                    // PASVモード
+                    ftp.enterLocalPassiveMode();
+                    // タイムアウト：10秒
+                    ftp.setDataTimeout(20000);
+                    Log.e("デバック", "3");
+
+                    // 受信元のディレクトリを作成
+                    //String path = Environment.getExternalStorageDirectory().getPath() + "/SAMPLE/";
+                    //new File(path).mkdir();
+
+                    // 受信   サーバーから「hoge1.txt」を、Android端末に「hoge2.txt」としてダウンロードする
+                    /*fos = new FileOutputStream(path + "hoge2.txt");
+                    if (!ftp.retrieveFile("/TEST/hoge1.txt", fos)) {
+                        return "ファイルの受信に失敗しました";
+                    }*/
+                    //Log.e("デバック", "3");
+                    // 送信   Android端末から「hoge2.txt」を、サーバーに「hoge3.txt」としてアップロードする
+                    fis = new FileInputStream(path);
+                    //Log.e("デバック", ""+path);
+                    //Log.e("デバック", ""+resultFileName);
+                    if (!ftp.storeFile("/home/ono/result0615/"+resultFileName, fis)) {
+
+                        return "ファイルの送信に失敗しました";
+                    }
+                    //Log.e("デバック", "4");
+                } catch (SocketException e) {
+
+                    return "FTP通信に失敗しました（１）";
+
+                } catch (IOException e) {
+
+                    return "FTP通信に失敗しました（２）";
+
+                } finally {
+
+                    if (fis != null) {
+                        try {
+                            fis.close();
+                        } catch (IOException e) {
+                        }
+                    }
+
+                    if (fos != null) {
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                        }
+                    }
+
+                    if (ftp != null) {
+                        try {
+                            // ログアウト
+                            ftp.logout();
+                        } catch (IOException e) {
+                        }
+                        try {
+                            // 切断
+                            ftp.disconnect();
+                        } catch (IOException e) {
+                        }
+                    }
+                }
+
+                return "送受信に成功しました";
+            }
+
+            /**
+             * 完了
+             */
+            @Override
+            protected void onPostExecute(String param) {
+
+                if (MainActivity.this.progressDialog.isShowing()) {
+
+                    // 進捗ダイアログを終了
+                    MainActivity.this.progressDialog.dismiss();
+                }
+
+                Toast.makeText(MainActivity.this, param, Toast.LENGTH_LONG).show();
+            }
+        };
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

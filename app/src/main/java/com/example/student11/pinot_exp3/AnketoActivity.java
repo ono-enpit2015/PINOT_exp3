@@ -39,6 +39,11 @@ public class AnketoActivity extends Activity {
     File ALL = new File(LOGDIR);
     File ANK = new File(LOGDIR2);
     String line;
+    String headline;
+    String displaycount;
+    String viewcount;
+    String touch;
+    Boolean interest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +58,38 @@ public class AnketoActivity extends Activity {
         //ListViewにアダプタ登録
         lv.setAdapter(adapter);
 
-        for(int i = 0; i < list.size(); i++){        //記事数は動的に変更できるようにする
-            map.put(i, false);
+        if(ANK.exists()){
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(ANK));
+                int k = 0;
+                while ((line = br.readLine()) != null) {
+                    StringTokenizer token = new StringTokenizer(line, "\t");
+                    headline = token.nextToken();
+                    displaycount = token.nextToken();
+                    viewcount = token.nextToken();
+                    touch = token.nextToken();
+                    interest = Boolean.valueOf(token.nextToken());
+                    map.put(k, interest);
+                    lv.setItemChecked(k, interest);
+                    k++;
+                }
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            for (int i = 0; i < list.size(); i++) {        //記事数は動的に変更できるようにする
+                map.put(i, false);
+            }
+            try {
+                if (ANK.createNewFile()) {
+                    //Toast.makeText(MainActivity.this, "ファイルの作成に成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    //Toast.makeText(MainActivity.this, "ファイルの作成に失敗", Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException e) {
+                //Toast.makeText(MainActivity.this, "例外が発生", Toast.LENGTH_SHORT).show();
+                System.out.println(e);
+            }
         }
 
         //アイテムがクリックされたときの処理
