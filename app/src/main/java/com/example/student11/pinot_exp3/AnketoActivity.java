@@ -62,6 +62,7 @@ public class AnketoActivity extends Activity {
             try {
                 BufferedReader br = new BufferedReader(new FileReader(ANK));
                 int k = 0;
+                int i=0;
                 while ((line = br.readLine()) != null) {
                     StringTokenizer token = new StringTokenizer(line, "\t");
                     headline = token.nextToken();
@@ -72,6 +73,8 @@ public class AnketoActivity extends Activity {
                     map.put(k, interest);
                     lv.setItemChecked(k, interest);
                     k++;
+                    i++;
+                    System.out.println("行数："+i+","+headline);
                 }
             }catch (IOException e) {
                 e.printStackTrace();

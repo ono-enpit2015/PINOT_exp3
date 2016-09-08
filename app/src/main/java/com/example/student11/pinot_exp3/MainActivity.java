@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +71,42 @@ public class MainActivity extends AppCompatActivity {
     TextView tv15;
     TextView tv16;
     TextView alltv;
+    TextView tv17;
+    TextView tv18;
+    TextView tv19;
+    TextView tv20;
+    TextView tv21;
+    TextView tv22;
+    TextView tv23;
+    TextView tv24;
+    TextView tv25;
+    TextView tv26;
+    TextView tv27;
+    TextView tv28;
+    TextView tv29;
+    TextView tv30;
+    TextView tv31;
+    TextView tv32;
+    TextView tv33;
+    TextView tv34;
+    TextView tv35;
+    TextView tv36;
+    TextView tv37;
+    TextView tv38;
+    TextView tv39;
+    TextView tv40;
+    TextView tv41;
+    TextView tv42;
+    TextView tv43;
+    TextView tv44;
+    TextView tv45;
+    TextView tv46;
+    TextView tv47;
+    TextView tv48;
+    TextView tv49;
+    TextView tv50;
+    TextView tv51;
+    TextView tv52;
     AsyncTask<Void, Void, String> task;
     private ProgressDialog progressDialog;
     static String path;
@@ -109,6 +147,42 @@ public class MainActivity extends AppCompatActivity {
         tv15 = (TextView) findViewById(R.id.Text15);
         tv16 = (TextView) findViewById(R.id.Text16);
         alltv = (TextView) findViewById(R.id.AllText);
+        tv17 = (TextView) findViewById(R.id.Text17);
+        tv18 = (TextView) findViewById(R.id.Text18);
+        tv19 = (TextView) findViewById(R.id.Text19);
+        tv20 = (TextView) findViewById(R.id.Text20);
+        tv21 = (TextView) findViewById(R.id.Text21);
+        tv22 = (TextView) findViewById(R.id.Text22);
+        tv23 = (TextView) findViewById(R.id.Text23);
+        tv24 = (TextView) findViewById(R.id.Text24);
+        tv25 = (TextView) findViewById(R.id.Text25);
+        tv26 = (TextView) findViewById(R.id.Text26);
+        tv27 = (TextView) findViewById(R.id.Text27);
+        tv28 = (TextView) findViewById(R.id.Text28);
+        tv29 = (TextView) findViewById(R.id.Text29);
+        tv30 = (TextView) findViewById(R.id.Text30);
+        tv31 = (TextView) findViewById(R.id.Text31);
+        tv32 = (TextView) findViewById(R.id.Text32);
+        tv33 = (TextView) findViewById(R.id.Text33);
+        tv34 = (TextView) findViewById(R.id.Text34);
+        tv35 = (TextView) findViewById(R.id.Text35);
+        tv36 = (TextView) findViewById(R.id.Text36);
+        tv37 = (TextView) findViewById(R.id.Text37);
+        tv38 = (TextView) findViewById(R.id.Text38);
+        tv39 = (TextView) findViewById(R.id.Text39);
+        tv40 = (TextView) findViewById(R.id.Text40);
+        tv41 = (TextView) findViewById(R.id.Text41);
+        tv42 = (TextView) findViewById(R.id.Text42);
+        tv43 = (TextView) findViewById(R.id.Text43);
+        tv44 = (TextView) findViewById(R.id.Text44);
+        tv45 = (TextView) findViewById(R.id.Text45);
+        tv46 = (TextView) findViewById(R.id.Text46);
+        tv47 = (TextView) findViewById(R.id.Text47);
+        tv48 = (TextView) findViewById(R.id.Text48);
+        tv49 = (TextView) findViewById(R.id.Text49);
+        tv50 = (TextView) findViewById(R.id.Text50);
+        tv51 = (TextView) findViewById(R.id.Text51);
+        tv52 = (TextView) findViewById(R.id.Text52);
 
 
         /*try {
@@ -144,10 +218,13 @@ public class MainActivity extends AppCompatActivity {
             //Toast.makeText(MainActivity.this, "download", Toast.LENGTH_SHORT).show();
             try {
                 BufferedReader br = new BufferedReader(new FileReader(ALL));
+                int i=0;
                 while ((line = br.readLine()) != null) {
                     StringTokenizer token = new StringTokenizer(line, "\t");
                     headline = token.nextToken();
                     list.add(headline);
+                    i++;
+                    System.out.println(i + "," + headline);
                 }
                 Intent intent = new Intent(MainActivity.this,AnketoActivity.class);//this,TestActivity.class
                 //intent.setClassName("com.example.student11.pinot_exp3", "com.example.student11.pinot_exp3.AnketoActivity");
@@ -244,16 +321,182 @@ public class MainActivity extends AppCompatActivity {
                 tv13.setText(String.valueOf(d));
                 tv14.setText("   "+String.valueOf(h));
                 tv15.setText("   "+String.valueOf(l));
-                tv16.setText("   "+String.valueOf(p));
+                tv16.setText("   " + String.valueOf(p));
                 alltv.setText(String.valueOf(q));
-                /*System.out.println(a);
-                System.out.println(b);
-                System.out.println(c);
-                System.out.println(d);
-                System.out.println(e);
-                System.out.println(f);
-                System.out.println(g);
-                System.out.println(h);*/
+                System.out.println("a:"+a);
+                System.out.println("b:"+b);
+                System.out.println("c:"+c);
+                System.out.println("d:"+d);
+                System.out.println("e:"+e);
+                System.out.println("f:"+f);
+                System.out.println("g:"+g);
+                System.out.println("h:"+h);
+                System.out.println("i:"+i);
+                System.out.println("j:"+j);
+                System.out.println("k:"+k);
+                System.out.println("l:"+l);
+                System.out.println("m:"+m);
+                System.out.println("n:"+n);
+                System.out.println("o:"+o);
+                System.out.println("p:"+p);
+                System.out.println("合計:"+q);
+
+                double val1 = (double)(a+e)*100/(a+b+c+d+e+f+g+h);
+                //元データをBigDecimal型にする
+                BigDecimal bd1 = new BigDecimal(val1);
+                //四捨五入する
+                bd1 = bd1.setScale(1, BigDecimal.ROUND_HALF_UP);  //小数第１位
+                double val2 = (double)(b+f)*100/(a+b+c+d+e+f+g+h);
+                BigDecimal bd2 = new BigDecimal(val2);
+                bd2 = bd2.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val3 = (double)(c+g)*100/(a+b+c+d+e+f+g+h);
+                BigDecimal bd3 = new BigDecimal(val3);
+                bd3 = bd3.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val4 = (double)(d+h)*100/(a+b+c+d+e+f+g+h);
+                BigDecimal bd4 = new BigDecimal(val4);
+                bd4 = bd4.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val5 = (double)(i+m)*100/(i+j+k+l+m+n+o+p);
+                BigDecimal bd5 = new BigDecimal(val5);
+                bd5 = bd5.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val6 = (double)(j+n)*100/(i+j+k+l+m+n+o+p);
+                BigDecimal bd6 = new BigDecimal(val6);
+                bd6 = bd6.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val7 = (double)(k+o)*100/(i+j+k+l+m+n+o+p);
+                BigDecimal bd7 = new BigDecimal(val7);
+                bd7 = bd7.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val8 = (double)(l+p)*100/(i+j+k+l+m+n+o+p);
+                BigDecimal bd8 = new BigDecimal(val8);
+                bd8 = bd8.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val9 = (double)(a+b+c+d)*100/(a+b+c+d+e+f+g+h);
+                BigDecimal bd9 = new BigDecimal(val9);
+                bd9 = bd9.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val10 = (double)(a)*100/(a+e);
+                BigDecimal bd10 = new BigDecimal(val10);
+                bd10 = bd10.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val11 = (double)(b)*100/(b+f);
+                BigDecimal bd11 = new BigDecimal(val11);
+                bd11 = bd11.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val12 = (double)(c)*100/(c+g);
+                BigDecimal bd12 = new BigDecimal(val12);
+                bd12 = bd12.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val13 = (double)(d)*100/(d+h);
+                BigDecimal bd13 = new BigDecimal(val13);
+                bd13 = bd13.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val14 = (double)(m+n+o+p)*100/(i+j+k+l+m+n+o+p);
+                BigDecimal bd14 = new BigDecimal(val14);
+                bd14 = bd14.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val15 = (double)(m)*100/(i+m);
+                BigDecimal bd15 = new BigDecimal(val15);
+                bd15 = bd15.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val16 = (double)(n)*100/(j+n);
+                BigDecimal bd16 = new BigDecimal(val16);
+                bd16 = bd16.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val17 = (double)(o)*100/(k+o);
+                BigDecimal bd17 = new BigDecimal(val17);
+                bd17 = bd17.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val18 = (double)(p)*100/(l+p);
+                BigDecimal bd18 = new BigDecimal(val18);
+                bd18 = bd18.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val19 = (double)(a+b+c+d+i+j+k+l)*100/(q);
+                BigDecimal bd19 = new BigDecimal(val19);
+                bd19 = bd19.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val20 = (double)(e+f+g+h+m+n+o+p)*100/(q);
+                BigDecimal bd20 = new BigDecimal(val20);
+                bd20 = bd20.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val21 = (double)(a+b+c+d+e+f+g+h)*100/(q);
+                BigDecimal bd21 = new BigDecimal(val21);
+                bd21 = bd21.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val22 = (double)(i+j+k+l+m+n+o+p)*100/(q);
+                BigDecimal bd22 = new BigDecimal(val22);
+                bd22 = bd22.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val23 = (double)(a+e+i+m)*100/(q);
+                BigDecimal bd23 = new BigDecimal(val23);
+                bd23 = bd23.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val24 = (double)(b+f+j+n)*100/(q);
+                BigDecimal bd24 = new BigDecimal(val24);
+                bd24 = bd24.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val25 = (double)(c+g+k+o)*100/(q);
+                BigDecimal bd25 = new BigDecimal(val25);
+                bd25 = bd25.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val26 = (double)(d+h+l+p)*100/(q);
+                BigDecimal bd26 = new BigDecimal(val26);
+                bd26 = bd26.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val27 = (double)(a+b+c+d)*100/(a+b+c+d+i+j+k+l);
+                BigDecimal bd27 = new BigDecimal(val27);
+                bd27 = bd27.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val28 = (double)(a)*100/(a+i);
+                BigDecimal bd28 = new BigDecimal(val28);
+                bd28 = bd28.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val29 = (double)(b)*100/(b+j);
+                BigDecimal bd29 = new BigDecimal(val29);
+                bd29 = bd29.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val30 = (double)(c)*100/(c+k);
+                BigDecimal bd30 = new BigDecimal(val30);
+                bd30 = bd30.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val31 = (double)(d)*100/(d+l);
+                BigDecimal bd31 = new BigDecimal(val31);
+                bd31 = bd31.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val32 = (double)(m+n+o+p)*100/(e+f+g+h+m+n+o+p);
+                BigDecimal bd32 = new BigDecimal(val32);
+                bd32 = bd32.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val33 = (double)(m)*100/(e+m);
+                BigDecimal bd33 = new BigDecimal(val33);
+                bd33 = bd33.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val34 = (double)(n)*100/(f+n);
+                BigDecimal bd34 = new BigDecimal(val34);
+                bd34 = bd34.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val35 = (double)(o)*100/(g+o);
+                BigDecimal bd35 = new BigDecimal(val35);
+                bd35 = bd35.setScale(1, BigDecimal.ROUND_HALF_UP);
+                double val36 = (double)(p)*100/(h+p);
+                BigDecimal bd36 = new BigDecimal(val36);
+                bd36 = bd36.setScale(1, BigDecimal.ROUND_HALF_UP);
+
+                tv17.setText("(視認回数0回でタップ)/(タップ):" + bd1.doubleValue());
+                tv18.setText("(視認回数1回でタップ)/(タップ):" + bd2.doubleValue());
+                tv19.setText("(視認回数2回でタップ)/(タップ):" + bd3.doubleValue());
+                tv20.setText("(視認回数3回でタップ)/(タップ):" + bd4.doubleValue());
+
+                tv21.setText("(視認回数0回で未タップ)/(未タップ):" + bd5.doubleValue());
+                tv22.setText("(視認回数1回で未タップ)/(未タップ):" + bd6.doubleValue());
+                tv23.setText("(視認回数2回で未タップ)/(未タップ):" + bd7.doubleValue());
+                tv24.setText("(視認回数3回で未タップ)/(未タップ):" + bd8.doubleValue());
+
+                tv25.setText("(興味あり)/(タップ):" + bd9.doubleValue());
+                tv26.setText("(興味あり)/(視認回数0回でタップ):" + bd10.doubleValue());
+                tv27.setText("(興味あり)/(視認回数1回でタップ):" + bd11.doubleValue());
+                tv28.setText("(興味あり)/(視認回数2回でタップ):" + bd12.doubleValue());
+                tv29.setText("(興味あり)/(視認回数3回でタップ):" + bd13.doubleValue());
+
+                tv30.setText("(興味なし)/(未タップ):" + bd14.doubleValue());
+                tv31.setText("(興味なし)/(視認回数0回で未タップ):" + bd15.doubleValue());
+                tv32.setText("(興味なし)/(視認回数1回で未タップ):" + bd16.doubleValue());
+                tv33.setText("(興味なし)/(視認回数2回で未タップ):" + bd17.doubleValue());
+                tv34.setText("(興味なし)/(視認回数3回で未タップ):" + bd18.doubleValue());
+
+                tv35.setText("(興味あり)/(配信された見出し):" + bd19.doubleValue());
+                tv36.setText("(興味なし)/(配信された見出し):" + bd20.doubleValue());
+
+                tv37.setText("(タップ)/(配信された見出し):" + bd21.doubleValue());
+                tv38.setText("(未タップ)/(配信された見出し):" + bd22.doubleValue());
+
+                tv39.setText("(視認回数0回)/(配信された見出し):" + bd23.doubleValue());
+                tv40.setText("(視認回数1回)/(配信された見出し):" + bd24.doubleValue());
+                tv41.setText("(視認回数2回)/(配信された見出し):" + bd25.doubleValue());
+                tv42.setText("(視認回数3回)/(配信された見出し):" + bd26.doubleValue());
+
+                tv43.setText("(タップ)/(興味あり):" + bd27.doubleValue());
+                tv44.setText("(タップ)/(視認回数0回で興味あり):" + bd28.doubleValue());
+                tv45.setText("(タップ)/(視認回数1回で興味あり):" + bd29.doubleValue());
+                tv46.setText("(タップ)/(視認回数2回で興味あり):" + bd30.doubleValue());
+                tv47.setText("(タップ)/(視認回数3回で興味あり):" + bd31.doubleValue());
+
+                tv48.setText("(未タップ)/(興味なし):" + bd32.doubleValue());
+                tv49.setText("(未タップ)/(視認回数0回で興味なし):" + bd33.doubleValue());
+                tv50.setText("(未タップ)/(視認回数1回で興味なし):" + bd34.doubleValue());
+                tv51.setText("(未タップ)/(視認回数2回で興味なし):" + bd35.doubleValue());
+                tv52.setText("(未タップ)/(視認回数3回で興味なし):" + bd36.doubleValue());
+
 
             }catch (IOException e) {
                 e.printStackTrace();
@@ -450,5 +693,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){				// 戻るボタンが押された！
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
