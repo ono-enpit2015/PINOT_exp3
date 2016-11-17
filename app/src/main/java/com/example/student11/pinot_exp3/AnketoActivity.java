@@ -76,6 +76,7 @@ public class AnketoActivity extends Activity {
                     i++;
                     System.out.println("行数："+i+","+headline);
                 }
+                br.close();
             }catch (IOException e) {
                 e.printStackTrace();
             }

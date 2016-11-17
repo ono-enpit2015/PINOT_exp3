@@ -26,13 +26,40 @@
         android:text="興味の有無アンケート開始" />
 
     <Button
-        android:id="@+id/analysisButton"
+        android:id="@+id/UPButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="分析開始"
+        android:text="UP作成"
 
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/filteringButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="フィルタリング"
+
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/hearingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ヒアリング用ファイル作成"
+
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:id="@+id/analysisButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分析開始"
+
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <TextView
             android:id="@+id/Text17"

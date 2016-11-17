@@ -24,10 +24,12 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.SocketException;
@@ -42,10 +44,14 @@ public class MainActivity extends AppCompatActivity {
     String LOGDIR1 = Environment.getExternalStorageDirectory().getPath()+"/data/all.txt";
     String LOGDIR2 = Environment.getExternalStorageDirectory().getPath()+"/data/anketo.txt";
     final String SDFILE3 = LOGDIR + "username.txt";
+    String SDFILE4 = LOGDIR + "tap_nointerest.txt";
+    String SDFILE5 = LOGDIR + "UserProfile.txt";
+    File UP = new File(SDFILE5);
     File ALL = new File(LOGDIR1);
     File ANK = new File(LOGDIR2);
     File DATA = new File(LOGDIR);
     File NAME = new File(SDFILE3);
+    File HEAR = new File(SDFILE4);
     ArrayList list = new ArrayList();
     HashMap map = new HashMap();
     String line;
@@ -112,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
     static String path;
     String resultFileName;
     String username;
+    String button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +136,15 @@ public class MainActivity extends AppCompatActivity {
 
         Button analysisButton = (Button)findViewById(R.id.analysisButton);
         analysisButton.setOnClickListener(analysisButtonOnClickListener);
+
+        Button hearingButton = (Button)findViewById(R.id.hearingButton);
+        hearingButton.setOnClickListener(hearingButtonOnClickListener);
+
+        Button UPButton = (Button)findViewById(R.id.UPButton);
+        UPButton.setOnClickListener(UPButtonOnClickListener);
+
+        Button FilButton = (Button)findViewById(R.id.filteringButton);
+        FilButton.setOnClickListener(FilButtonOnClickListener);
 
         tv1 = (TextView) findViewById(R.id.Text1);
         tv2 = (TextView) findViewById(R.id.Text2);
@@ -226,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
                     i++;
                     System.out.println(i + "," + headline);
                 }
+                br.close();
                 Intent intent = new Intent(MainActivity.this,AnketoActivity.class);//this,TestActivity.class
                 //intent.setClassName("com.example.student11.pinot_exp3", "com.example.student11.pinot_exp3.AnketoActivity");
                 intent.putExtra("LIST", list);
@@ -301,6 +318,15 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    if(a==0){
+                        a=1;
+                    }else if(b==0){
+                        b=1;
+                    }else if(c==0){
+                        c=1;
+                    }else if(d==0){
+                        d=1;
+                    }
                     q=a+b+c+d+e+f+g+h+i+j+k+l+m+n+o+p;
                 }
                 progressDialog.dismiss();
@@ -340,6 +366,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("o:"+o);
                 System.out.println("p:"+p);
                 System.out.println("合計:"+q);
+
 
                 double val1 = (double)(a+e)*100/(a+b+c+d+e+f+g+h);
                 //元データをBigDecimal型にする
@@ -497,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
                 tv51.setText("(未タップ)/(視認回数2回で興味なし):" + bd35.doubleValue());
                 tv52.setText("(未タップ)/(視認回数3回で興味なし):" + bd36.doubleValue());
 
-
+            br.close();
             }catch (IOException e) {
                 e.printStackTrace();
             }
@@ -524,12 +551,118 @@ public class MainActivity extends AppCompatActivity {
 
                             path = LOGDIR + "/anketo.txt";
                             resultFileName = username + "興味の有無.txt";
+                            button="analysis";
                             DataSend();
                             task.execute();
                         }
                     })
                     .setNegativeButton("NO", null)
                     .show();
+        }
+    };
+
+    private  View.OnClickListener FilButtonOnClickListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            //Toast.makeText(MainActivity.this, "download", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this,AnketoActivity.class);//this,TestActivity.class
+                //intent.setClassName("com.example.student11.pinot_exp3", "com.example.student11.pinot_exp3.AnketoActivity");
+                intent.putExtra("LIST", list);
+                startActivity(intent);
+        }
+    };
+
+    private  View.OnClickListener hearingButtonOnClickListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(ANK));
+                try {
+                    BufferedWriter bw = new BufferedWriter(new FileWriter(HEAR));
+                    while ((line = br.readLine()) != null) {
+                        StringTokenizer token = new StringTokenizer(line, "\t");
+                        headline = token.nextToken();
+                        displaycount = Integer.valueOf(token.nextToken());
+                        viewcount = Integer.valueOf(token.nextToken());
+                        tapinfo = Integer.valueOf(token.nextToken());
+                        interest = Boolean.valueOf(token.nextToken());
+                        if(tapinfo>=0 && !interest) {
+                            bw.write(headline + "\t" + tapinfo + "\t" + interest);
+                            bw.newLine();
+                        }
+                    }
+                    bw.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                Toast.makeText(MainActivity.this, "success!", Toast.LENGTH_SHORT).show();
+                br.close();
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("ファイルの送信")
+                    .setMessage("ヒアリング用ファイルを送信しますか？")
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // OK button pressed
+                            try {
+                                NAME.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                BufferedReader name = new BufferedReader(new FileReader(NAME));
+                                username = name.readLine();
+                                name.close();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+
+                            path = SDFILE4;
+                            resultFileName = username + "ヒアリング用.txt";
+                            button="hearing";
+                            DataSend();
+                            task.execute();
+                        }
+                    })
+                    .setNegativeButton("NO", null)
+                    .show();
+        }
+    };
+
+    private  View.OnClickListener UPButtonOnClickListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            //Toast.makeText(MainActivity.this, "download", Toast.LENGTH_SHORT).show();
+            try {
+                UP.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(ANK));
+                PINOT_FILTER P = new PINOT_FILTER();
+                while ((line = br.readLine()) != null) {
+                    StringTokenizer token = new StringTokenizer(line, "\t");
+                    headline = token.nextToken();
+                    displaycount = Integer.parseInt(token.nextToken());
+                    viewcount = Integer.parseInt(token.nextToken());
+                    tapinfo = Integer.parseInt(token.nextToken());
+                    interest = Boolean.parseBoolean(token.nextToken());
+                    if(tapinfo>=0){
+                        P.Pinot_Filter(headline, 3);
+                    }else if((tapinfo==-1)&&(viewcount>=1)){
+                        P.Pinot_Filter(headline, 2);
+                    }
+                }
+                Toast.makeText(MainActivity.this, "作成完了", Toast.LENGTH_SHORT).show();
+                br.close();
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -610,9 +743,16 @@ public class MainActivity extends AppCompatActivity {
                     fis = new FileInputStream(path);
                     //Log.e("デバック", ""+path);
                     //Log.e("デバック", ""+resultFileName);
-                    if (!ftp.storeFile("/home/ono/result0615/"+resultFileName, fis)) {
+                    if(button.equals("analysis")) {
+                        if (!ftp.storeFile("/home/ono/result0615/" + resultFileName, fis)) {
 
-                        return "ファイルの送信に失敗しました";
+                            return "ファイルの送信に失敗しました";
+                        }
+                    }else if(button.equals("hearing")){
+                        if (!ftp.storeFile("/home/ono/hearing/" + resultFileName, fis)) {
+
+                            return "ファイルの送信に失敗しました";
+                        }
                     }
                     //Log.e("デバック", "4");
                 } catch (SocketException e) {
